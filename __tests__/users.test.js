@@ -14,7 +14,7 @@ describe('top-secret routes', () => {
   });
 
   it('should be able to create a user', async () => {
-    const res = await request(app).post('/api/v1/users/signup').send({
+    const res = await request(app).post('/api/v1/users').send({
       email: 'ryan@defense.gov',
       password: 'password-3',
     });
@@ -31,7 +31,7 @@ describe('top-secret routes', () => {
       password: 'password-3',
     });
 
-    const res = await request(app).post('/api/v1/users/signin').send({
+    const res = await request(app).post('/api/v1/users/sessions').send({
       email: 'ryan@defense.gov',
       password: 'password-3',
     });
