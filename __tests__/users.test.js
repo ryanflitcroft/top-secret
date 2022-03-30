@@ -41,4 +41,22 @@ describe('top-secret routes', () => {
       user,
     });
   });
+
+  it('should be able to sign out a currently logged in user', async () => {
+    let user = await UserService.signUp({
+      email: 'ryan@defense.gov',
+      password: 'password-3',
+    });
+
+    user = await UserService.signIn({
+      email: 'ryan@defense.gov',
+      password: 'password-3',
+    });
+
+    const res = await request(app).delete('/api/v1/users/sessions').send(user);
+
+    expect(res.body).toEqual({
+      message: 'Successfully signed out!',
+    });
+  });
 });
