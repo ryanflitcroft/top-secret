@@ -59,6 +59,15 @@ describe('top-secret-routes', () => {
     });
   });
 
+  it('should not allow an unauthenticated user to get data from secrets', async () => {
+    const res = await request(app).get('/api/v1/secrets');
+
+    expect(res.body).toEqual({
+      message: 'You must be signed in',
+      status: 401,
+    });
+  });
+
   it('should allow an authenticated user to get data from secrets', async () => {
     const agent = request.agent(app);
 
