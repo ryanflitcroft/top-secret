@@ -33,7 +33,7 @@ describe('top-secret-routes', () => {
     });
   });
 
-  it('should allow a user to post an instance of Secret when authenticated', async () => {
+  it('should allow an authenticated user to post an instance of Secret into secrets', async () => {
     const agent = request.agent(app);
 
     await UserService.signUp({
@@ -57,5 +57,46 @@ describe('top-secret-routes', () => {
       description: '...thats what.',
       createdAt: expect.any(String),
     });
+  });
+
+  it('should allow an authenticated user to get data from secrets', async () => {
+    const agent = request.agent(app);
+
+    await UserService.signUp({
+      email: 'ryan@defense.gov',
+      password: 'password-3',
+    });
+
+    await agent.post('/api/v1/users/sessions').send({
+      email: 'ryan@defense.gov',
+      password: 'password-3',
+    });
+
+    await agent.post('/api/v1/secrets').send({
+      title: 'Guess what...',
+      description: '...thats what.',
+    });
+
+    await agent.post('/api/v1/secrets').send({
+      title: 'Whats your name',
+      description: 'Whats your sign',
+    });
+
+    const res = await agent.get('/api/v1/secrets');
+
+    expect(res.body).toEqual([
+      {
+        title: 'Guess what...',
+        description: '...thats what.',
+        createdAt: expect.any(String),
+        id: expect.any(String),
+      },
+      {
+        title: 'Whats your name',
+        description: 'Whats your sign',
+        createdAt: expect.any(String),
+        id: expect.any(String),
+      },
+    ]);
   });
 });
